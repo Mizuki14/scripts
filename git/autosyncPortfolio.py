@@ -5,6 +5,7 @@
 # https://www.techgeekbuzz.com/how-to-use-github-api-in-python/
 
 #Libraries
+import json
 from prettytable import PrettyTable
 from github import Github
 import subprocess
@@ -18,10 +19,10 @@ github_username = "Mizuki14"
 #def universal object
 table = PrettyTable()
 
-def getUserData():
+def getAllURL():
     #def and inilize
     
-    table.field_names = ["Key", "Value"]
+    table.field_names = ["Name of URL", "URL"]
     
     api_url =f"https://api.github.com/users/{github_username}" 
 
@@ -45,32 +46,39 @@ def getRepoInfo():
     
     print("Attenmpting to connect.... ")
     
-    try:
-        print("successful")
+    # try:
+    #     print("successful")
         
-    except:
-        print("error. ")
+    # except:
+    #     print("error. ")
         
     #send get request
     response = requests.get(api_url)
-
+    
     #get the json data
     data =  response.json()
+    #print(data)
+    
 
     for repository in data:
         table.add_row([repository["name"], repository["created_at"], repository["updated_at"]])
 
     print(table)
 if __name__ == '__main__':
+    
     parser = argparse.ArgumentParser()
-    #list functions
-    FUNCTION_MAP = {'get repositories data' : getRepoInfo,
-                'get user public info' : getUserData}
-
-    parser.add_argument('command', choices=FUNCTION_MAP.keys())
-
+    
+    #add options (function) to select from
+    parser.add_argument('operation', help = 'One of "getAllURL", "getRepoInfo"')
+    
     args = parser.parse_args()
+    
+    operation = args.operation
+    
+    operations = {
+        'getAllURL' : getAllURL, 
+        'getRepoInfo' : getRepoInfo
+    }
 
-    func = FUNCTION_MAP[args.command]
-    func()
-
+    action = operations.get(operation, lambda: print('{}: no such operation'.format(operation)))
+    action()
