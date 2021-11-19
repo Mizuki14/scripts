@@ -12,8 +12,7 @@ import subprocess
 import requests
 import argparse
 
-#Access-token
-access_token = Github("")
+#access_token = Github("")
 github_username = "Mizuki14"
 
 #def universal object
@@ -39,26 +38,18 @@ def getAllURL():
     
 def getRepoInfo():
     #def and initilize
-    table.field_names = ["Repository Name", "Created Date", "Last Modifiedclear"]
+    table.field_names = ["Repository Name", "Created Date", "Last Modified"]
 
     #api url to grab public user repositories
     api_url = f"https://api.github.com/users/{github_username}/repos"
     
     print("Attenmpting to connect.... ")
-    
-    # try:
-    #     print("successful")
-        
-    # except:
-    #     print("error. ")
         
     #send get request
     response = requests.get(api_url)
     
     #get the json data
     data =  response.json()
-    #print(data)
-    
 
     for repository in data:
         table.add_row([repository["name"], repository["created_at"], repository["updated_at"]])
